@@ -17,6 +17,8 @@ import Business.UserAccount.UserAccount;
 import Business.WorkQueue.DonateBloodWorkRequest;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
@@ -36,7 +38,9 @@ public class DonateBloodJPanel extends javax.swing.JPanel {
 
     Enterprise enterprise;
     UserAccount userAccount;
+    private static final Logger LOG = Logger.getLogger(DonateBloodJPanel.class.getName());
 
+    
     /**
      * Creates new form DonateBloodJPanel
      */
@@ -295,7 +299,7 @@ public class DonateBloodJPanel extends javax.swing.JPanel {
         phoneNoTxt.setText(String.valueOf(phoneNum));
     }
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
-        // TODO add your handling code here:
+        LOG.log(Level.INFO, "Requesting blood bank for donation approval");
         if (!ageTxt.getText().isEmpty() && !bloodGrpTxt.getText().isEmpty()
                 && !donorTxt.getText().isEmpty() && !emailTxt.getText().isEmpty() && !hbTxt.getText().isEmpty()
                 && !heightTxt.getText().isEmpty() && !phoneNoTxt.getText().isEmpty() && !unitsTxt.getText().isEmpty()
@@ -354,7 +358,7 @@ public class DonateBloodJPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(null, "Requested for donation");
 
                 }
-
+                LOG.log(Level.INFO, "Request sent to the blood bank for donation approval");
                 JOptionPane.showMessageDialog(this, "Added donor details to the system");
             } else {
                 JOptionPane.showMessageDialog(this, "User does not exist! Please check Phone Number");

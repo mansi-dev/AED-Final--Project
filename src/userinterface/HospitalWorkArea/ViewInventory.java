@@ -12,6 +12,8 @@ import Business.Manager.Manager;
 import Business.Organization.HospitalOrganization;
 import Business.Organization.Organizations;
 import Business.UserAccount.UserAccount;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /**
@@ -21,12 +23,13 @@ import javax.swing.JPanel;
 public class ViewInventory extends javax.swing.JPanel {
 
     EcoSystem ecosystem;
-    
+
     JPanel userProcessContainer;
     UserAccount account;
     Organizations organization;
     Enterprise enterprise;
-    
+    private static final Logger LOG = Logger.getLogger(ViewInventory.class.getName());
+
     /**
      * Creates new form ViewReceiverHistory
      */
@@ -148,23 +151,25 @@ public class ViewInventory extends javax.swing.JPanel {
 
     private void btnCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckActionPerformed
         // TODO add your handling code here:
+        
         String bloodGroup = txtBloodBank.getText();
+        LOG.log(Level.INFO, "Checking inventory for blood group:", bloodGroup);
         for (Organizations o : enterprise.getOrganizationDirectory().getOrganizationList()) {
-     
-                if (o.getName().equalsIgnoreCase("Hospital Organization")) {
-                   HospitalOrganization bbOrg =  (HospitalOrganization) o;
-                    Manager bm = (Manager) account.getUser();
-                    int id = (int) bm.getHospital().getId();
-                    if(bbOrg!=null){
-                        
+
+            if (o.getName().equalsIgnoreCase("Hospital Organization")) {
+                HospitalOrganization bbOrg = (HospitalOrganization) o;
+                Manager bm = (Manager) account.getUser();
+                int id = (int) bm.getHospital().getId();
+                if (bbOrg != null) {
+
                     BloodStock bbstock = bbOrg.getHospitalDirectory().getHospitalByID(id).getBloodStock().stream().filter(item -> bloodGroup.equals(item.getBloodGroup())).findFirst().orElse(null);
-                    if(bbstock!=null){
-                       txtQuantity.setText(String.valueOf(bbstock.getQuantity()));
-                    }else{
-                                               txtQuantity.setText("0");
-                    }
+                    if (bbstock != null) {
+                        txtQuantity.setText(String.valueOf(bbstock.getQuantity()));
+                    } else {
+                        txtQuantity.setText("0");
                     }
                 }
+            }
         }
     }//GEN-LAST:event_btnCheckActionPerformed
 

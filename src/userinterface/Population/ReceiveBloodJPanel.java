@@ -16,6 +16,8 @@ import Business.Population.ReceiverTransaction;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.RecieverBloodWorkRequest;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
@@ -34,7 +36,9 @@ public class ReceiveBloodJPanel extends javax.swing.JPanel {
 
     Enterprise enterprise;
     UserAccount userAccount;
-
+    private static final Logger LOG = Logger.getLogger(ReceiveBloodJPanel.class.getName());
+    
+    
     /**
      * Creates new form ReceiveBloodJPanel
      */
@@ -260,6 +264,7 @@ public class ReceiveBloodJPanel extends javax.swing.JPanel {
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
         // TODO add your handling code here:
+        LOG.log(Level.INFO, "Requesting hospital for blood bags");
         if (!receiverTxt.getText().isEmpty() && !bloodGrpTxt.getText().isEmpty()
                 && !phoneNumberTxt.getText().isEmpty() && !hbLvl.getText().isEmpty() && !unitsTxt.getText().isEmpty()
                 && orgCombo.getSelectedItem() != null && !emailTxt.getText().isEmpty()) {
@@ -307,7 +312,7 @@ public class ReceiveBloodJPanel extends javax.swing.JPanel {
                 // System.out.println(org.getWorkQueue().getWorkRequestList());
                 userAccount.getWorkQueue().getWorkRequestList().add(bloodBankWorkRequest);
                 JOptionPane.showMessageDialog(null, "Blood request raised");
-
+                LOG.log(Level.INFO, "Blood request raised");
             }
 
             JOptionPane.showMessageDialog(this, "Added receiver details to the system");

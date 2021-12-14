@@ -11,6 +11,8 @@ import Business.Enterprise.Enterprise;
 import Business.Organization.Organizations;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -26,11 +28,13 @@ public class HospitalJPanel extends javax.swing.JPanel {
     EcoSystem ecosystem;
     UserAccount auth;
 
-        
     JPanel userProcessContainer;
     UserAccount account;
     Organizations organization;
     Enterprise enterprise;
+    private static final Logger LOG = Logger.getLogger(HospitalJPanel.class.getName());
+    
+
     /**
      * Creates new form HospitalJPanel
      */
@@ -164,7 +168,7 @@ public class HospitalJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnOrderBloodSampleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderBloodSampleActionPerformed
-        // TODO add your handling code here:
+        LOG.log(Level.INFO, "Order blood sample button clicked");
         jPanel1.removeAll();
         OrderPanel aPanel = new OrderPanel(account, organization, enterprise, ecosystem);
         jPanel1.add(aPanel);
@@ -173,14 +177,13 @@ public class HospitalJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnOrderBloodSampleActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
-
         JFrame frame = (JFrame) SwingUtilities.getRoot(this);
         frame.remove(this);
         frame.pack();
         frame.setSize(1425, 988);
         frame.add(new LoginForm(ecosystem));
         dB4OUtil.storeSystem(EcoSystem.getInstance());
+        LOG.log(Level.INFO, "Successfully logged out of the system");
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
@@ -192,10 +195,9 @@ public class HospitalJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnViewActionPerformed
 
     private void btnView1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnView1ActionPerformed
-        // TODO add your handling code here:
-                jPanel1.removeAll();
-ManageBloodRequest mbr = new ManageBloodRequest(account, organization, enterprise, ecosystem);
-jPanel1.add(mbr);
+        jPanel1.removeAll();
+        ManageBloodRequest mbr = new ManageBloodRequest(account, organization, enterprise, ecosystem);
+        jPanel1.add(mbr);
         CardLayout cardLayout = (CardLayout) jPanel1.getLayout();
         cardLayout.next(jPanel1);
     }//GEN-LAST:event_btnView1ActionPerformed

@@ -16,6 +16,8 @@ import Business.UserAccount.UserAccount;
 import Business.WorkQueue.RecieverBloodWorkRequest;
 import Business.WorkQueue.WorkRequest;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,6 +31,9 @@ public class ManageBloodRequest extends javax.swing.JPanel {
     Organizations organization;
     Enterprise enterprise;
     EcoSystem ecosystem;
+    
+    private static final Logger LOG = Logger.getLogger(ManageBloodRequest.class.getName());
+
 
     /**
      * Creates new form ManageDonateBloodRequest
@@ -137,17 +142,23 @@ public class ManageBloodRequest extends javax.swing.JPanel {
         int selectedRow = donorTrnTable.getSelectedRow();
         if (selectedRow != -1) {
             RecieverBloodWorkRequest db = (RecieverBloodWorkRequest) model.getValueAt(selectedRow, 0);
+            Hospital hospital = db.getReceiverTransaction().getHospital();
+            BloodStock bloodStock = hospital.getBloodStock().stream().filter(item -> db.getPerson().getBloodGroup().equals(item.getBloodGroup())).findFirst().orElse(null);
+                
             if (db.getStatus().equals("Approved")) {
+                LOG.log(Level.INFO, "Request is already approved");
                 JOptionPane.showMessageDialog(this, "Request already approved");
             } else {
 
-                Hospital hospital = db.getReceiverTransaction().getHospital();
-                BloodStock bloodStock = hospital.getBloodStock().stream().filter(item -> db.getPerson().getBloodGroup().equals(item.getBloodGroup())).findFirst().orElse(null);
+                
                 int quant = 0;
                 if (bloodStock == null) {
                     JOptionPane.showMessageDialog(this, "Blood Bag not available!");
                     db.setStatus("Rejected");
 
+                } else if(bloodStock.getQuantity()<db.getReceiverTransaction().getNumberOfUnits()){
+                    JOptionPane.showMessageDialog(this, "Blood Bag not available!");
+                    db.setStatus("Rejected");
                 } else {
                     quant = bloodStock.getQuantity() - db.getReceiverTransaction().getNumberOfUnits();
                     db.setStatus("Approved");
@@ -161,7 +172,6 @@ public class ManageBloodRequest extends javax.swing.JPanel {
 
         } else {
             JOptionPane.showMessageDialog(this, "Please select a record to approve the request");
-
         }
     }//GEN-LAST:event_btnApproveActionPerformed
 
@@ -174,6 +184,7 @@ public class ManageBloodRequest extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void populateRequestTable() {
+        LOG.log(Level.INFO, "Populating blood request table");
         DefaultTableModel model = (DefaultTableModel) donorTrnTable.getModel();
         model.setRowCount(0);
         for (Network n : this.ecosystem.getNetworkList()) {
@@ -187,7 +198,6 @@ public class ManageBloodRequest extends javax.swing.JPanel {
                                 if (request instanceof RecieverBloodWorkRequest) {
 
                                     Object[] rowTrn = new Object[10];
-                                    //row[0] = ++index;
 
                                     rowTrn[0] = request;
                                     rowTrn[1] = ((RecieverBloodWorkRequest) request).getPerson().getName();

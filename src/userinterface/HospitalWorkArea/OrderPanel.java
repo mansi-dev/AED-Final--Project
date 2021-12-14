@@ -12,12 +12,13 @@ import Business.Enterprise.Enterprise;
 import Business.Manager.Manager;
 import Business.Network.Network;
 import Business.Organization.BloodBankOrganization;
-import Business.Organization.HospitalManagerOrganization;
 import Business.Organization.Organizations;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.OrderBloodSampleWorkRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -34,6 +35,9 @@ public class OrderPanel extends javax.swing.JPanel {
     UserAccount account;
     Organizations organization;
     Enterprise enterprise;
+    private static final Logger LOG = Logger.getLogger(OrderPanel.class.getName());
+    
+    
 
     /**
      * Creates new form AvailabilityPanel
@@ -222,6 +226,7 @@ public class OrderPanel extends javax.swing.JPanel {
 
     private void btnCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckActionPerformed
         // TODO add your handling code here:
+        LOG.log(Level.INFO, "Checking if blood bags are available in nearby blood banks");
         String city = txtCity.getText();
         String bloodGroup = txtBloodGroup.getText();
         BloodBankOrganization bOrg = null;
@@ -290,6 +295,7 @@ public class OrderPanel extends javax.swing.JPanel {
             org.getWorkQueue().getWorkRequestList().add(obs);
             // System.out.println(org.getWorkQueue().getWorkRequestList());
             account.getWorkQueue().getWorkRequestList().add(obs);
+            LOG.log(Level.INFO, "Requested bloodbank for blood sample");
             JOptionPane.showMessageDialog(null, "Requested bloodbank for blood sample");
         }
 
