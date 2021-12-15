@@ -37,8 +37,7 @@ public class ReceiveBloodJPanel extends javax.swing.JPanel {
     Enterprise enterprise;
     UserAccount userAccount;
     private static final Logger LOG = Logger.getLogger(ReceiveBloodJPanel.class.getName());
-    
-    
+
     /**
      * Creates new form ReceiveBloodJPanel
      */
@@ -239,7 +238,7 @@ public class ReceiveBloodJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     private void populateHospital() {
-                ArrayList<Enterprise> enterpriseList = EcoSystem.getInstance().getNetworkList().get(0).getEnterpriseDirectory().getEnterpriseList();
+        ArrayList<Enterprise> enterpriseList = EcoSystem.getInstance().getNetworkList().get(0).getEnterpriseDirectory().getEnterpriseList();
         Enterprise enterprise = enterpriseList.stream().filter(item -> "Hospital".equals(item.getName())).findFirst().orElse(null);
 
         for (Organizations o : enterprise.getOrganizationDirectory().getOrganizationList()) {
@@ -279,48 +278,45 @@ public class ReceiveBloodJPanel extends javax.swing.JPanel {
                     break;
                 }
             }
-            if(person !=null){
+            if (person != null) {
                 float price = Float.parseFloat(unitsTxt.getText()) * 300;
-            ReceiverTransaction rt = person.addNewReceiverTransaction();
-            rt.setHblevel(Float.parseFloat(hbTxt.getText()));
-            rt.setNumberOfUnits(Integer.parseInt(unitsTxt.getText()));
-            rt.setAge(Integer.parseInt(ageTxt.getText()));
-            rt.setHeight(Float.parseFloat(heightTxt.getText()));
-            rt.setWeight(Float.parseFloat(weightTxt.getText()));
-            person.setBloodGroup(bloodGrpTxt.getText());
-            rt.setHospitalByID(((String) orgCombo.getSelectedItem()));
-            rt.setPrice(price);
-            Organizations oTemp = null;
-            enterpriseTemp = enterpriseList.stream().filter(item -> "Hospital".equals(item.getName())).findFirst().orElse(null);
+                ReceiverTransaction rt = person.addNewReceiverTransaction();
+                rt.setHblevel(Float.parseFloat(hbTxt.getText()));
+                rt.setNumberOfUnits(Integer.parseInt(unitsTxt.getText()));
+                rt.setAge(Integer.parseInt(ageTxt.getText()));
+                rt.setHeight(Float.parseFloat(heightTxt.getText()));
+                rt.setWeight(Float.parseFloat(weightTxt.getText()));
+                person.setBloodGroup(bloodGrpTxt.getText());
+                rt.setHospitalByID(((String) orgCombo.getSelectedItem()));
+                rt.setPrice(price);
+                Organizations oTemp = null;
+                enterpriseTemp = enterpriseList.stream().filter(item -> "Hospital".equals(item.getName())).findFirst().orElse(null);
 
-            for (Organizations organization : enterpriseTemp.getOrganizationDirectory().getOrganizationList()) {
-                if (organization.getName().equals("Hospital Organization")) {
-
-                    System.out.println(organization);
-                    oTemp = organization;
-                    break;
+                for (Organizations organization : enterpriseTemp.getOrganizationDirectory().getOrganizationList()) {
+                    if (organization.getName().equals("Hospital Organization")) {
+                        oTemp = organization;
+                        break;
+                    }
                 }
-            }
-            if (oTemp != null) {
-                RecieverBloodWorkRequest bloodBankWorkRequest = new RecieverBloodWorkRequest();
-                bloodBankWorkRequest.setReceiverTransaction(rt);
-                bloodBankWorkRequest.setStatus("Pending");
-                bloodBankWorkRequest.setMessage("Recieve blood");
-                bloodBankWorkRequest.setSender(userAccount);
-                bloodBankWorkRequest.setPerson(person);
-                oTemp.getWorkQueue().getWorkRequestList().add(bloodBankWorkRequest);
-                // System.out.println(org.getWorkQueue().getWorkRequestList());
-                userAccount.getWorkQueue().getWorkRequestList().add(bloodBankWorkRequest);
-                JOptionPane.showMessageDialog(null, "Blood request raised");
-                LOG.log(Level.INFO, "Blood request raised");
-            }
+                if (oTemp != null) {
+                    RecieverBloodWorkRequest bloodBankWorkRequest = new RecieverBloodWorkRequest();
+                    bloodBankWorkRequest.setReceiverTransaction(rt);
+                    bloodBankWorkRequest.setStatus("Pending");
+                    bloodBankWorkRequest.setMessage("Recieve blood");
+                    bloodBankWorkRequest.setSender(userAccount);
+                    bloodBankWorkRequest.setPerson(person);
+                    oTemp.getWorkQueue().getWorkRequestList().add(bloodBankWorkRequest);
+                    // System.out.println(org.getWorkQueue().getWorkRequestList());
+                    userAccount.getWorkQueue().getWorkRequestList().add(bloodBankWorkRequest);
+                    JOptionPane.showMessageDialog(null, "Blood request raised");
+                    LOG.log(Level.INFO, "Blood request raised");
+                }
 
-            JOptionPane.showMessageDialog(this, "Added receiver details to the system");
-        }
-            else{
+                JOptionPane.showMessageDialog(this, "Added receiver details to the system");
+            } else {
                 JOptionPane.showMessageDialog(this, "User does not exist! Please check Phone Number");
             }
-        }else {
+        } else {
             JOptionPane.showMessageDialog(this, "Fields cannot be empty");
 
         }
